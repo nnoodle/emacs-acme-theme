@@ -3,7 +3,7 @@
 
 ~acme-theme~ is an Emacs theme inspired by the [[http://acme.cat-v.org/][Acme]]/[[http://doc.cat-v.org/plan_9/][Plan 9]] motif.
 Outside of a few exceptions, it has no syntax highlighting by default.
-[[./screenshot-1.png][emacs-acme-theme-plan9-parody]]
+[[./screenshot-1.png]]
 * Installation
 Download ~emacs-acme-theme.el~ and select it with ~M-x package-install-file RET~.
 Now you should be able to load ~acme~ with ~load-theme~.
@@ -12,4 +12,4 @@ See ~M-x customize-group RET acme-theme RET~ to see variables that you
 can customize.
 * Screenshot
 Here is a screenshot of the Acme theme with several minor modes on.
-[[./screenshot-2.png][emacs-acme-theme-with-minor-modes]]
+[[./screenshot-2.png]]
