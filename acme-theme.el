@@ -131,13 +131,15 @@ Also bind `class' to ((class color) (min-colors 89))."
 (defun acme-theme-white-background (&optional bg)
   "Use a white background if BG is nil, otherwise use BG."
   (interactive)
-  (acme-theme-with-color-variables
-    (let ((bg (or bg white)))
-      (face-remap-add-relative 'default :background bg)
-      (face-remap-add-relative 'hl-line :background gray-pale)
-      (face-remap-add-relative 'region :background gray)
-      (face-remap-add-relative 'fringe :foreground gray-dark :background bg)
-      (face-remap-add-relative 'scroll-bar :foreground bg :background gray-dark))))
+  (when (or (and acme-theme-white-backgrounds (memq 'acme custom-enabled-themes))
+            (called-interactively-p))
+    (acme-theme-with-color-variables
+      (let ((bg (or bg white)))
+        (face-remap-add-relative 'default :background bg)
+        (face-remap-add-relative 'hl-line :background gray-pale)
+        (face-remap-add-relative 'region :background gray)
+        (face-remap-add-relative 'fringe :foreground gray-dark :background bg)
+        (face-remap-add-relative 'scroll-bar :foreground bg :background gray-dark)))))
 
 (acme-theme-with-color-variables
   (custom-theme-set-faces
@@ -162,9 +164,6 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(query-replace ((t (:inherit region))))
    `(shadow ,(acme-theme-alternative `((t (:foreground ,gray-dark)))))
    `(minibuffer-prompt ((t nil)))
-   `(fixed-pitch ((t nil)))
-   `(fixed-pitch-serif ((t nil)))
-   `(variable-pitch ((t nil)))
    `(tooltip ((t (:foreground ,black :background ,green-pale))))
 
    ;; window-divider
@@ -183,11 +182,12 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(mode-line-emphasis ((t (:weight bold))))
    `(mode-line-buffer-id ((t nil)))
    `(mode-line-highlight ((t nil)))
+   `(compilation-mode-line-exit ((t (:weight semi-bold :inherit compilation-info))))
+   `(compilation-mode-line-fail ((t (:weight semi-bold :inherit compilation-error))))
 
    ;; header-line
    `(header-line ((t (:inherit mode-line))))
    `(header-line-highlight ((t (:inherit mode-line))))
-   `(proced-sort-header ((t (:inherit mode-line :weight bold))))
 
    ;; syntax highlighting :^)
    `(font-lock-builtin-face ((t nil)))
@@ -206,29 +206,19 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(font-lock-variable-name-face ((t nil)))
    `(font-lock-warning-face ((t nil)))
 
-   ;; eshell
-   `(eshell-prompt ((t nil)))
-   `(eshell-ls-archive ((t nil)))
-   `(eshell-ls-backup ((t nil)))
-   `(eshell-ls-clutter ((t nil)))
-   `(eshell-ls-directory ((t nil)))
-   `(eshell-ls-executable ((t nil)))
-   `(eshell-ls-missing ((t nil)))
-   `(eshell-ls-product ((t nil)))
-   `(eshell-ls-symlink ((t nil)))
-   `(eshell-ls-unreadable ((t nil)))
-   `(eshell-ls-special ((t nil)))
-
-   ;; dired
-   `(dired-perm-write ((t nil)))
-
    ;; isearch
    `(isearch ((t (:inherit region))))
    `(isearch-fail ((t (:background ,red))))
 
+   ;; ido
+   `(ido-only-match ((t (:weight bold))))
+   `(ido-subdir ((t nil)))
+   `(ido-virtual ((t (:slant italic))))
+
    ;; ivy/counsel
    `(ivy-confirm-face ((t (:inherit minibuffer-prompt :foreground ,green))))
    `(ivy-current-match ((t (:inherit region))))
+   `(ivy-grep-info ((t nil)))
    `(ivy-highlight-face ((t (:inherit font-lock-builtin-face))))
    `(ivy-match-required-face ((t (:inherit minibuffer-prompt :foreground ,red-dark))))
    `(ivy-minibuffer-match-face-1 ((t (:inherit hl-line))))
@@ -238,7 +228,6 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(ivy-minibuffer-match-highlight ((t (:inherit region))))
    `(ivy-modified-buffer ((t nil)))
    `(ivy-virtual ((t (:inherit font-lock-builtin-face :slant italic))))
-   `(ivy-grep-info ((t nil)))
    `(counsel-key-binding ((t nil)))
 
    ;; swiper
@@ -249,69 +238,16 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(swiper-match-face-4 ((t (:inherit ivy-minibuffer-match-face-4))))
 
    ;; company-mode
-   `(company-tooltip ((t (:foreground ,black :background ,green-pale))))
-   `(company-tooltip-annotation ((t (:foreground ,blue-deep))))
-   `(company-tooltip-selection ((t (:background ,green-dark :foreground ,green-pale))))
-   `(company-tooltip-mouse ((t (:inherit company-tooltip-selection))))
-   `(company-tooltip-common ((t (:weight bold))))
-   `(company-tooltip-common-selection ((t (:inherit company-tooltip-common))))
    `(company-preview ((t (:foreground ,gray-dark))))
    `(company-preview-common ((t (:foreground ,gray-dark))))
    `(company-scrollbar-bg ((t (:background ,green))))
    `(company-scrollbar-fg ((t (:background ,green-dark))))
-
-   ;; info-mode
-   `(info-header-node ((t (:slant italic))))
-   `(info-index-match ((t (:inherit region))))
-   `(info-menu-star ((t nil)))
-   `(info-node ((t (:slant italic))))
-
-   ;; message-mode
-   `(message-cited-text ((t nil)))
-   `(message-header-cc ((t nil)))
-   `(message-header-name ((t nil)))
-   `(message-header-newsgroups ((t nil)))
-   `(message-header-other ((t nil)))
-   `(message-header-subject ((t nil)))
-   `(message-header-to ((t nil)))
-   `(message-header-xheader ((t nil)))
-   `(message-mml ((t nil)))
-   `(message-separator ((t nil)))
-
-   ;; elfeed
-   `(elfeed-log-debug-level-face ((t nil)))
-   `(elfeed-log-error-level-face ((t nil)))
-   `(elfeed-log-info-level-face ((t nil)))
-   `(elfeed-log-warn-level-face ((t nil)))
-   `(elfeed-search-date-face ((t nil)))
-   `(elfeed-search-feed-face ((t nil)))
-   `(elfeed-search-tag-face ((t nil)))
-   `(elfeed-search-title-face ((t nil)))
-
-   ;; outline
-   `(outline-level-1 ((t nil)))
-   `(outline-level-2 ((t nil)))
-   `(outline-level-3 ((t nil)))
-   `(outline-level-4 ((t nil)))
-   `(outline-level-5 ((t nil)))
-   `(outline-level-6 ((t nil)))
-   `(outline-level-7 ((t nil)))
-   `(outline-level-8 ((t nil)))
-
-   ;; org
-   `(org-done ((t nil)))
-   `(org-hide ((t (:foreground ,yellow-pale))))
-   `(org-table ((t nil)))
-   `(org-todo ((t nil)))
-   `(org-footnote ((t nil)))
-   `(org-tag ((t nil)))
-   `(org-date ((t nil)))
-   `(org-document-info ((t nil)))
-   `(org-document-info-keyword ((t nil)))
-   `(org-document-title ((t nil)))
-
-   ;; sh-mode
-   `(sh-quoted-exec ((t nil)))
+   `(company-tooltip ((t (:foreground ,black :background ,green-pale))))
+   `(company-tooltip-annotation ((t (:foreground ,blue-deep))))
+   `(company-tooltip-common ((t (:weight bold))))
+   `(company-tooltip-common-selection ((t (:inherit company-tooltip-common))))
+   `(company-tooltip-mouse ((t (:inherit company-tooltip-selection))))
+   `(company-tooltip-selection ((t (:background ,green-dark :foreground ,green-pale))))
 
    ;; show-paren
    `(show-paren-match ((t (:underline ,(if acme-theme-gray-rainbow-delimiters black t)))))
@@ -330,9 +266,120 @@ Also bind `class' to ((class color) (min-colors 89))."
 
    ;; whitespace
    `(trailing-whitespace ((t (:background ,red-pale))))
-   `(whitespace-tab ((t (:foreground ,gray-pale))))
    `(whitespace-newline ((t (:inherit whitespace-tab))))
    `(whitespace-space ((t (:inherit whitespace-tab))))
+   `(whitespace-tab ((t (:foreground ,gray))))
+
+   ;; dired
+   `(dired-perm-write ((t nil)))
+
+   ;; proced
+   `(proced-sort-header ((t (:inherit mode-line :weight bold))))
+
+   ;; info-mode
+   `(info-header-node ((t (:slant italic))))
+   `(info-index-match ((t (:inherit region))))
+   `(info-menu-star ((t nil)))
+   `(info-node ((t (:slant italic))))
+
+   ;; eww
+   `(eww-form-checkbox ((t (:inherit eww-form-submit))))
+   `(eww-form-file ((t (:inherit eww-form-submit))))
+   `(eww-form-select ((t (:inherit eww-form-submit))))
+   `(eww-form-submit ((t (:foreground ,black :background ,frost-pale :box (:line-width 1 :style released-button)))))
+   `(eww-form-text ((t (:inherit eww-form-submit))))
+   `(eww-form-textarea ((t (:inherit eww-form-text))))
+   `(eww-invalid-certificate ((t nil)))
+   `(eww-valid-certificate ((t nil)))
+
+   ;; erc
+   `(erc-action-face ((t (:slant italic))))
+   `(erc-current-nick-face ((t (:underline t))))
+   `(erc-fool-face ((t (:inherit shadow :slant italic))))
+   `(erc-header-line ((t (:inherit mode-line))))
+   `(erc-input-face ((t (:inherit shadow))))
+   `(erc-keyword-face ((t (:background ,green-pale :weight bold :underline t))))
+   `(erc-my-nick-face ((t nil)))
+   `(erc-nick-msg-face ((t (:slant italic))))
+   `(erc-notice-face ((t (:weight semi-bold))))
+   `(erc-pal-face ((t nil)))
+   `(erc-prompt-face ((t (:weight bold))))
+   `(erc-timestamp-face ((t (:weight semi-bold))))
+
+   ;; message-mode
+   `(message-cited-text ((t nil)))
+   `(message-header-cc ((t nil)))
+   `(message-header-name ((t (:weight semi-bold))))
+   `(message-header-newsgroups ((t nil)))
+   `(message-header-other ((t nil)))
+   `(message-header-subject ((t nil)))
+   `(message-header-to ((t nil)))
+   `(message-header-xheader ((t nil)))
+   `(message-mml ((t nil)))
+   `(message-separator ((t nil)))
+
+   ;; elfeed
+   `(elfeed-log-debug-level-face ((t nil)))
+   `(elfeed-log-error-level-face ((t nil)))
+   `(elfeed-log-info-level-face ((t nil)))
+   `(elfeed-log-warn-level-face ((t nil)))
+   `(elfeed-search-date-face ((t nil)))
+   `(elfeed-search-feed-face ((t nil)))
+   `(elfeed-search-tag-face ((t nil)))
+   `(elfeed-search-title-face ((t nil)))
+
+   ;; notmuch
+   `(notmuch-crypto-part-header ((t nil)))
+   `(notmuch-crypto-signature-bad-key ((t (:weight semi-bold))))
+   `(notmuch-crypto-signature-good ((t (:weight semi-bold))))
+   `(notmuch-crypto-signature-good-key ((t (:weight semi-bold))))
+   `(notmuch-crypto-signature-unknown ((t (:weight semi-bold))))
+   `(notmuch-hello-logo-background ((t nil)))
+   `(notmuch-message-summary-face ((t (:inherit mode-line))))
+   `(notmuch-tag-added ((t (:underline ,black))))
+   `(notmuch-tag-deleted ((t (:strike-through ,black))))
+   `(notmuch-tag-face ((t nil)))
+   `(notmuch-tag-flagged ((t (:weight bold))))
+   `(notmuch-tag-unread ((t (:foreground ,red-deep :weight bold)))) ; too important
+
+   ;; outline
+   `(outline-level-1 ((t nil)))
+   `(outline-level-2 ((t nil)))
+   `(outline-level-3 ((t nil)))
+   `(outline-level-4 ((t nil)))
+   `(outline-level-5 ((t nil)))
+   `(outline-level-6 ((t nil)))
+   `(outline-level-7 ((t nil)))
+   `(outline-level-8 ((t nil)))
+
+   ;; org
+   `(org-date ((t nil)))
+   `(org-document-info ((t nil)))
+   `(org-document-info-keyword ((t nil)))
+   `(org-document-title ((t nil)))
+   `(org-done ((t nil)))
+   `(org-footnote ((t nil)))
+   `(org-hide ((t (:foreground ,yellow-pale))))
+   `(org-table ((t nil)))
+   `(org-tag ((t nil)))
+   `(org-todo ((t nil)))
+
+   ;; eshell
+   `(eshell-ls-archive ((t nil)))
+   `(eshell-ls-backup ((t nil)))
+   `(eshell-ls-clutter ((t nil)))
+   `(eshell-ls-directory ((t nil)))
+   `(eshell-ls-executable ((t nil)))
+   `(eshell-ls-missing ((t nil)))
+   `(eshell-ls-product ((t nil)))
+   `(eshell-ls-special ((t nil)))
+   `(eshell-ls-symlink ((t nil)))
+   `(eshell-ls-unreadable ((t nil)))
+   `(eshell-prompt ((t nil)))
+
+   ;; sh-mode
+   `(sh-heredoc ((t (:inherit shadow))))
+   `(sh-quoted-exec ((t nil)))
 
    ;; comint
    `(comint-highlight-input ((t nil)))
@@ -349,8 +396,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(term-color-yellow ((t nil)))
 
    ;; magit
-   `(magit-section-highlight ((t (:inherit hl-line))))
    `(magit-diff-context-highlight ((t (:inherit magit-section-highlight))))
+   `(magit-section-highlight ((t (:inherit hl-line))))
 
    ;; git-gutter
    `(git-gutter:added ((t (:inherit fringe))))
@@ -360,7 +407,7 @@ Also bind `class' to ((class color) (min-colors 89))."
 (acme-theme-with-color-variables
   (custom-theme-set-variables
    'acme
-   '(rainbow-delimiters-max-face-count 8)
+   `(rainbow-delimiters-max-face-count ,(if acme-theme-gray-rainbow-delimiters 1 8))
    `(ansi-color-names-vector
      ,(if acme-theme-more-syntax-hl
           [,black ,red ,green ,red-pale ,blue-dark ,frost-deep ,frost ,black]
@@ -373,17 +420,17 @@ Also bind `class' to ((class color) (min-colors 89))."
              (border-color . ,green)))))
 
   (when acme-theme-change-defaults
+    (setenv "PS1" "% ")
     (custom-theme-set-variables
      'acme
      ;; acme-like behavior
      ;; '(blink-cursor-mode 0)
      ;; '(cursor-type (quote bar))
      ;; '(scroll-bar-mode (quote left))
+     '(delete-active-region 1)
      '(eshell-prompt-function
-       (lambda ()
-         (concat (abbreviate-file-name (eshell/pwd))
-                 (if (= (user-uid) 0) " # " " % "))))
-     '(eshell-prompt-regexp "^[^#%$\n]* [#%$] ")
+       (lambda () (if (= (user-uid) 0) "# " "% ")))
+     '(eshell-prompt-regexp "^[#%] ")
      '(mouse-autoselect-window t)
      '(list-directory-brief-switches "-aCF")
      '(window-divider-default-right-width 2)
@@ -392,17 +439,17 @@ Also bind `class' to ((class color) (min-colors 89))."
 
 (acme-theme-with-color-variables
   (when acme-theme-white-backgrounds
-    ;; package-list is already like contrib/gui
     ;; similar to empty space in acme
     (add-hook 'lisp-interaction-mode-hook #'acme-theme-white-background)
     ;; like right-click context menus
+    (add-hook 'completion-list-mode-hook (lambda () (acme-theme-white-background green-pale)))
     (add-hook 'magit-popup-mode-hook (lambda () (acme-theme-white-background green-pale)))
     ;; kinda like the sam(1)
     (add-hook 'evil-command-window-mode-hook (lambda () (acme-theme-white-background frost-pale)))
     ;; like 9term(1)
     (add-hook 'shell-mode-hook #'acme-theme-white-background)
     (add-hook 'term-mode-hook #'acme-theme-white-background)
-    ;; (add-hook 'eshell-mode-hook #'acme-theme-white-background) ; but also like win(1)
+    ;; (add-hook 'eshell-mode-hook #'acme-theme-white-background) ; like win(1)
     ;; like page(1)
     (add-hook 'image-mode-hook (lambda () (acme-theme-white-background gray-dark)))
     (add-hook 'doc-view-mode-hook (lambda () (acme-theme-white-background gray-dark)))
@@ -411,8 +458,13 @@ Also bind `class' to ((class color) (min-colors 89))."
     (add-hook 'chart-mode-hook #'acme-theme-white-background)
     ;; like stats(1) (but without the fancy graphs)
     (add-hook 'proced-mode-hook #'acme-theme-white-background)
-    ;; pretty sure mothra has a white background
+    ;; like gping(1)
+    (add-hook 'net-utils-mode-hook #'acme-theme-white-background)
+    ;; like mothra(1)
     (add-hook 'eww-mode-hook #'acme-theme-white-background)
+    ;; looks like faces(1)
+    (add-hook 'calendar-mode-hook (lambda () (acme-theme-white-background frost-pale)))
+    (add-hook 'display-time-world-mode-hook (lambda () (acme-theme-white-background frost-pale)))
     ))
 
 ;;; patch `tooltip-show' to allow customizing border-color
@@ -451,5 +503,6 @@ in echo area."
        (sit-for 1)
        (message "%s" text)))))
 
+(run-hooks 'acme-theme-hook)
 (provide-theme 'acme)
 ;;; acme-theme.el ends here
