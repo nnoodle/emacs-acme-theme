@@ -101,7 +101,7 @@ https://groups.google.com/d/msg/golang-nuts/hJHCAaiL0so/kG3BHV6QFfIJ"
     (green-dark  . "#448844")
     (green       . "#88cc88")
     (green-pale  . "#eaffea")
-    (blue-deep   . "#000099") ; tagbox(?)
+    (blue-deep   . "#000099") ; tagbox
     (blue-dark   . "#0088cc")
     (blue        . "#00aaff")
     (blue-pale   . "#c0eaff"))
@@ -136,12 +136,28 @@ Also bind `class' to ((class color) (min-colors 89))."
     (acme-theme-with-color-variables
       (let ((bg (or bg white)))
         (face-remap-add-relative 'default :background bg)
-        (face-remap-add-relative 'hl-line :background gray-pale)
+        (face-remap-add-relative 'highlight :background gray-pale)
         (face-remap-add-relative 'region :background gray)
         (face-remap-add-relative 'fringe :foreground gray-dark :background bg)
         (face-remap-add-relative 'scroll-bar :foreground bg :background gray-dark)))))
 
 (acme-theme-with-color-variables
+  ;; basic faces additional to faces.el
+  (defface acme-theme-note
+    `((t (:underline (:color ,green :style wave))))
+    "Face for linter notes."
+    :group 'acme-theme)
+
+  (defface acme-theme-warning
+    `((t (:underline (:color ,blue :style wave))))
+    "Face for linter warnings."
+    :group 'acme-theme)
+
+  (defface acme-theme-error
+    `((t (:underline (:color ,red :style wave))))
+    "Face for linter errors."
+    :group 'acme-theme)
+
   (custom-theme-set-faces
    'acme
    ;; basic
@@ -149,15 +165,18 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(success ((t (:foreground ,green))))
    `(warning ((t (:foreground ,red-dark))))
    `(error ((t (:foreground ,red-deep))))
+   `(homoglyph ,(acme-theme-alternative `((t :foreground ,frost))))
    `(escape-glyph ,(acme-theme-alternative `((t :foreground ,frost))))
-   `(link ((t (:foreground ,black :underline t :weight bold))))
-   `(link-visited ((t (:foreground ,black :underline t :weight normal))))
-   `(highlight ((t (:inherit region))))
+   ;; `(link ((t (:foreground ,black :underline t :weight semi-bold))))
+   ;; `(link-visited ((t (:inherit link :weight normal))))
+   `(link ((t (:foreground ,black :underline t))))
+   `(link-visited ((t (:inherit link :slant italic))))
+   `(highlight ((t (:background ,yellow-semi))))
    `(region ((t (:background ,yellow))))
    `(cursor ((t (:background ,black))))
    `(fringe ((t (:foreground ,yellow-dark :background ,yellow-pale))))
    `(scroll-bar ((t (:foreground ,yellow-pale :background ,yellow-dark))))
-   `(hl-line ((t (:background ,yellow-semi))))
+   `(hl-line ((t (:inherit highlight))))
    `(vertical-border ((t (:background ,black))))
    `(secondary-selection ((t (:background ,red-deep :foreground ,white))))
    `(lazy-highlight ((t (:background ,green-dark :foreground ,white))))
@@ -221,17 +240,18 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(ivy-grep-info ((t nil)))
    `(ivy-highlight-face ((t (:inherit font-lock-builtin-face))))
    `(ivy-match-required-face ((t (:inherit minibuffer-prompt :foreground ,red-dark))))
-   `(ivy-minibuffer-match-face-1 ((t (:inherit hl-line))))
+   `(ivy-minibuffer-match-face-1 ((t (:inherit highlight))))
    `(ivy-minibuffer-match-face-2 ((t (:inherit ivy-minibuffer-match-face-1 :background ,yellow :weight semi-bold))))
    `(ivy-minibuffer-match-face-3 ((t (:inherit ivy-minibuffer-match-face-2))))
    `(ivy-minibuffer-match-face-4 ((t (:inherit ivy-minibuffer-match-face-3))))
    `(ivy-minibuffer-match-highlight ((t (:inherit region))))
    `(ivy-modified-buffer ((t nil)))
+   `(ivy-remote ((t nil)))
    `(ivy-virtual ((t (:inherit font-lock-builtin-face :slant italic))))
    `(counsel-key-binding ((t nil)))
 
    ;; swiper
-   `(swiper-line-face ((t (:inherit hl-line))))
+   `(swiper-line-face ((t (:inherit highlight))))
    `(swiper-match-face-1 ((t (:inherit ivy-minibuffer-match-face-1))))
    `(swiper-match-face-2 ((t (:inherit ivy-minibuffer-match-face-2))))
    `(swiper-match-face-3 ((t (:inherit ivy-minibuffer-match-face-3))))
@@ -358,11 +378,13 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-document-info-keyword ((t nil)))
    `(org-document-title ((t nil)))
    `(org-done ((t nil)))
+   `(org-ellipsis ((t nil)))
    `(org-footnote ((t nil)))
    `(org-hide ((t (:foreground ,yellow-pale))))
    `(org-table ((t nil)))
    `(org-tag ((t nil)))
    `(org-todo ((t nil)))
+
 
    ;; eshell
    `(eshell-ls-archive ((t nil)))
@@ -397,16 +419,37 @@ Also bind `class' to ((class color) (min-colors 89))."
 
    ;; magit
    `(magit-diff-context-highlight ((t (:inherit magit-section-highlight))))
-   `(magit-section-highlight ((t (:inherit hl-line))))
+   `(magit-section-highlight ((t (:inherit highlight))))
 
    ;; git-gutter
    `(git-gutter:added ((t (:inherit fringe))))
    `(git-gutter:deleted ((t (:inherit fringe))))
-   `(git-gutter:modified ((t (:inherit fringe))))))
+   `(git-gutter:modified ((t (:inherit fringe))))
+
+   ;; flymake
+   `(flymake-note ((t (:inherit acme-theme-note))))
+   `(flymake-warning ((t (:inherit acme-theme-warning))))
+   `(flymake-error ((t (:inherit acme-theme-error))))
+
+   ;; flycheck
+   `(flycheck-info ((t (:inherit acme-theme-note))))
+   `(flycheck-warning ((t (:inherit acme-theme-warning))))
+   `(flycheck-error ((t (:inherit acme-theme-error))))
+
+   ;; sly
+   `(sly-mrepl-prompt-face ((t (:weight semi-bold))))
+   `(sly-mrepl-output-face ((t nil)))
+   `(sly-note-face ((t (:inherit acme-theme-note))))
+   `(sly-style-warning-face ((t (:inherit acme-theme-note))))
+   `(sly-warning-face ((t (:inherit acme-theme-warning))))
+   `(sly-error-face ((t (:inherit acme-theme-error))))
+   `(sly-mode-line ((t nil)))
+   ))
 
 (acme-theme-with-color-variables
   (custom-theme-set-variables
    'acme
+   '(exwm-floating-border-color ,frost)
    `(rainbow-delimiters-max-face-count ,(if acme-theme-gray-rainbow-delimiters 1 8))
    `(ansi-color-names-vector
      ,(if acme-theme-more-syntax-hl
@@ -417,7 +460,17 @@ Also bind `class' to ((class color) (min-colors 89))."
              (internal-border-width . 2)
              (border-width . 2)
              (no-special-glyphs . t)
-             (border-color . ,green)))))
+             (border-color . ,green))))
+   `(pdf-view-midnight-colors
+     (cons ,gray-pale ,black))
+   `(pdf-annot-default-annotation-properties
+     (quote ((t (label . ,user-full-name))
+             (text (icon . "Note")
+                   (color . ,black))
+             (highlight (color . ,yellow))
+             (squiggly (color . ,red-deep))
+             (strike-out(color . ,black))
+             (underline (color . ,red-deep))))))
 
   (when acme-theme-change-defaults
     (setenv "PS1" "% ")
@@ -484,20 +537,20 @@ in echo area."
   (if use-echo-area
       (tooltip-show-help-non-mode text)
     (condition-case error
-	(let ((params (copy-sequence tooltip-frame-parameters))
-	      (fg (face-attribute 'tooltip :foreground))
-	      (bg (face-attribute 'tooltip :background)))
-	  (when (stringp fg)
-	    (setf (alist-get 'foreground-color params) (or (alist-get 'foreground-color params) fg))
-	    (setf (alist-get 'border-color params) (or (alist-get 'border-color params) fg)))
-	  (when (stringp bg)
-	    (setf (alist-get 'background-color params) (or (alist-get 'background-color params) bg)))
-	  (x-show-tip (propertize text 'face 'tooltip)
-		      (selected-frame)
-		      params
-		      tooltip-hide-delay
-		      tooltip-x-offset
-		      tooltip-y-offset))
+        (let ((params (copy-sequence tooltip-frame-parameters))
+              (fg (face-attribute 'tooltip :foreground))
+              (bg (face-attribute 'tooltip :background)))
+          (when (stringp fg)
+            (setf (alist-get 'foreground-color params) (or (alist-get 'foreground-color params) fg))
+            (setf (alist-get 'border-color params) (or (alist-get 'border-color params) fg)))
+          (when (stringp bg)
+            (setf (alist-get 'background-color params) (or (alist-get 'background-color params) bg)))
+          (x-show-tip (propertize text 'face 'tooltip)
+                      (selected-frame)
+                      params
+                      tooltip-hide-delay
+                      tooltip-x-offset
+                      tooltip-y-offset))
       (error
        (message "Error while displaying tooltip: %s" error)
        (sit-for 1)

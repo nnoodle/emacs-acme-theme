@@ -1,18 +1,28 @@
-#+TITLE: emacs-acme-theme
 #+AUTHOR: Noodles!
 
+* emacs-acme-theme
 ~acme-theme~ is an Emacs theme inspired by the [[http://acme.cat-v.org/][Acme]]/[[http://doc.cat-v.org/plan_9/][Plan 9]] motif.
 Outside of a few exceptions, it has no syntax highlighting by default.
 
 [[./screenshot-1.png]]
 
-* Installation
+** Installation
 Download ~emacs-acme-theme.el~ and select it with ~M-x package-install-file RET~.
 Now you should be able to load ~acme~ with ~load-theme~.
-* Customization
+
+If you use ~use-package~, add something like this to your initialization file.
+#+BEGIN_SRC emacs-lisp
+  (use-package acme-theme
+    :ensure t
+    :defer t
+    :init
+    ;; variables to configure
+    (setq acme-theme-gray-rainbow-delimiters nil))
+#+END_SRC
+** Customization
 See ~M-x customize-group RET acme-theme RET~ to see variables that you
 can customize.
-* Screenshot
+** Screenshot
 Here is a screenshot of the Acme theme with ~acme-theme-more-syntax-hl~ set to ~t~.
 
 [[./screenshot-2.png]]
