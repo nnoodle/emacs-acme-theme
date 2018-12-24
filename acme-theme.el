@@ -167,8 +167,6 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(error ((t (:foreground ,red-deep))))
    `(homoglyph ,(acme-theme-alternative `((t :foreground ,frost))))
    `(escape-glyph ,(acme-theme-alternative `((t :foreground ,frost))))
-   ;; `(link ((t (:foreground ,black :underline t :weight semi-bold))))
-   ;; `(link-visited ((t (:inherit link :weight normal))))
    `(link ((t (:foreground ,black :underline t))))
    `(link-visited ((t (:inherit link :slant italic))))
    `(highlight ((t (:background ,yellow-semi))))
@@ -373,18 +371,21 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(outline-level-8 ((t nil)))
 
    ;; org
-   `(org-date ((t nil)))
-   `(org-document-info ((t nil)))
-   `(org-document-info-keyword ((t nil)))
+   `(org-block ((t (:inherit org-code))))
+   `(org-code ((t (:inherit (shadow fixed-pitch-serif)))))
+   `(org-date ((t (:inherit fixed-pitch-serif))))
+   `(org-document-info ((t (:inherit org-meta-line))))
+   `(org-document-info-keyword ((t (:inherit org-document-info))))
    `(org-document-title ((t nil)))
    `(org-done ((t nil)))
    `(org-ellipsis ((t nil)))
    `(org-footnote ((t nil)))
    `(org-hide ((t (:foreground ,yellow-pale))))
-   `(org-table ((t nil)))
-   `(org-tag ((t nil)))
+   `(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   `(org-priority ((t (:inherit fixed-pitch))))
+   `(org-table ((t (:inherit fixed-pitch))))
+   `(org-tag ((t (:inherit fixed-pitch))))
    `(org-todo ((t nil)))
-
 
    ;; eshell
    `(eshell-ls-archive ((t nil)))
@@ -449,7 +450,7 @@ Also bind `class' to ((class color) (min-colors 89))."
 (acme-theme-with-color-variables
   (custom-theme-set-variables
    'acme
-   '(exwm-floating-border-color ,frost)
+   `(exwm-floating-border-color ,frost)
    `(rainbow-delimiters-max-face-count ,(if acme-theme-gray-rainbow-delimiters 1 8))
    `(ansi-color-names-vector
      ,(if acme-theme-more-syntax-hl
