@@ -1,9 +1,9 @@
 ;;; acme-theme.el --- An Acme-esque Emacs theme -*- lexical-binding:t; -*-
 
-;; Copyright (C) 2018 Noodles!
+;; Copyright (C) 2019 Noodles!
 
 ;; Author: Noodles! <nnoodle@chiru.no>
-;; Version: 0.1.0
+;; Version: 0.2.0
 ;; Keywords: themes
 ;; URL: https://github.com/nnoodle/emacs-acme-theme
 
@@ -474,7 +474,9 @@ Also bind `class' to ((class color) (min-colors 89))."
              (underline (color . ,red-deep))))))
 
   (when acme-theme-change-defaults
-    (setenv "PS1" "% ")
+    ;; this is awkward to undo.
+    ;; (setenv "PS1" "% ")
+    ;; (setenv "PS2" "\t")
     (custom-theme-set-variables
      'acme
      ;; acme-like behavior
@@ -482,9 +484,11 @@ Also bind `class' to ((class color) (min-colors 89))."
      ;; '(cursor-type (quote bar))
      ;; '(scroll-bar-mode (quote left))
      '(delete-active-region 1)
+     ;; on plan9port, the prompt appears as `% ', while on 9front,
+     ;; this appears something like `term% '
      '(eshell-prompt-function
-       (lambda () (if (= (user-uid) 0) "# " "% ")))
-     '(eshell-prompt-regexp "^[#%] ")
+       (lambda () "% "))
+     '(eshell-prompt-regexp "^% ")
      '(mouse-autoselect-window t)
      '(list-directory-brief-switches "-aCF")
      '(window-divider-default-right-width 2)
